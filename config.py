@@ -1,0 +1,5 @@
+SQL_USERNAME = 'postgres'
+SQL_PASSWORD = '<YOUR PASSWORD>'
+SQL_IP = 'localhost'
+SQL_PORT = '5432'
+DATABASE = 'crowdfunding_db'
