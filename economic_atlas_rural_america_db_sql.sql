@@ -17,7 +17,7 @@ CREATE TABLE "jobs" (
     "pctemp_fire" DECIMAL   NOT NULL,
     "pctemp_services" DECIMAL   NOT NULL,
     "pctemp_government" DECIMAL   NOT NULL,
-    "num_civ_employed" INT   NOT NULL,
+    "num_civ_employed" DECIMAL  NOT NULL,
     "last_update" timestamp  DEFAULT Localtimestamp NOT NULL,
     CONSTRAINT "pk_jobs" PRIMARY KEY (
         "fips"
@@ -28,19 +28,19 @@ CREATE TABLE "income" (
     "fips" VARCHAR(05)   NOT NULL,
     "state" VARCHAR(2)   NOT NULL,
     "county" VARCHAR(40)   NOT NULL,
-    "median_hh_inc_acs" INT   NOT NULL,
-    "percapita_inc" INT   NOT NULL,
+    "median_hh_inc_acs" DECIMAL   NOT NULL,
+    "percapita_inc" DECIMAL   NOT NULL,
     "poverty_rate_0_17_acs" DECIMAL   NOT NULL,
     "poverty_rate_acs" DECIMAL   NOT NULL,
     "deep_pov_all" DECIMAL   NOT NULL,
     "deep_pov_children" DECIMAL   NOT NULL,
-    "num_allinpov_acs" INT   NOT NULL,
+    "num_allinpov_acs" DECIMAL   NOT NULL,
     "pct_pov_0_17" DECIMAL   NOT NULL,
-    "pov_0_17" INT   NOT NULL,
-    "med_hh_inc" INT   NOT NULL,
-    "pov_all" INT   NOT NULL,
+    "pov_0_17" DECIMAL   NOT NULL,
+    "med_hh_inc" DECIMAL   NOT NULL,
+    "pov_all" DECIMAL   NOT NULL,
     "pct_pov_all" DECIMAL   NOT NULL,
-    "num_in_pov_0_17_acs" INT   NOT NULL,
+    "num_in_pov_0_17_acs" DECIMAL   NOT NULL,
     "last_update" timestamp  DEFAULT Localtimestamp NOT NULL,
     CONSTRAINT "pk_income" PRIMARY KEY (
         "fips"
@@ -51,7 +51,7 @@ CREATE TABLE "unemployment" (
     "fips" VARCHAR(05)   NOT NULL,
     "year" VARCHAR(04)   NOT NULL,
     "unemp_rate" DECIMAL   NOT NULL,
-    "num_unemployed" INT   NOT NULL,
+    "num_unemployed" DECIMAL   NOT NULL,
     "last_update" timestamp  DEFAULT Localtimestamp NOT NULL,
     CONSTRAINT "pk_unemloyment" PRIMARY KEY (
         "fips"
@@ -61,8 +61,8 @@ CREATE TABLE "unemployment" (
 CREATE TABLE "employment" (
     "fips" VARCHAR(05)   NOT NULL,
     "year" VARCHAR(04)   NOT NULL,
-    "num_civ_labor_force" INT   NOT NULL,
-    "num_employed" INT   NOT NULL,
+    "num_civ_labor_force" DECIMAL  NOT NULL,
+    "num_employed" DECIMAL   NOT NULL,
     "last_update" timestamp  DEFAULT Localtimestamp NOT NULL,
     CONSTRAINT "pk_employment" PRIMARY KEY (
         "fips"
