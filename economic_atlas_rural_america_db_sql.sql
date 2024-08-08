@@ -17,8 +17,8 @@ CREATE TABLE "jobs" (
     "pctemp_fire" DECIMAL   NOT NULL,
     "pctemp_services" DECIMAL   NOT NULL,
     "pctemp_government" DECIMAL   NOT NULL,
-    "num_civ_employed" DECIMAL  NOT NULL,
-    "last_update" timestamp  DEFAULT Localtimestamp NOT NULL,
+    "num_civ_employed" DECIMAL   NOT NULL,
+    "last_update" timestamp   NOT NULL,
     CONSTRAINT "pk_jobs" PRIMARY KEY (
         "fips"
      )
@@ -41,35 +41,37 @@ CREATE TABLE "income" (
     "pov_all" DECIMAL   NOT NULL,
     "pct_pov_all" DECIMAL   NOT NULL,
     "num_in_pov_0_17_acs" DECIMAL   NOT NULL,
-    "last_update" timestamp  DEFAULT Localtimestamp NOT NULL,
+    "last_update" timestamp   NOT NULL,
     CONSTRAINT "pk_income" PRIMARY KEY (
         "fips"
      )
 );
 
-CREATE TABLE "unemployment" (
+CREATE TABLE "unemloyment" (
+    "id" varchar(08)   NOT NULL,
     "fips" VARCHAR(05)   NOT NULL,
     "year" VARCHAR(04)   NOT NULL,
     "unemp_rate" DECIMAL   NOT NULL,
     "num_unemployed" DECIMAL   NOT NULL,
-    "last_update" timestamp  DEFAULT Localtimestamp NOT NULL,
+    "last_update" TIMESTAMP   NOT NULL,
     CONSTRAINT "pk_unemloyment" PRIMARY KEY (
-        "fips"
+        "id"
      )
 );
 
 CREATE TABLE "employment" (
+    "id" varchar(08)   NOT NULL,
     "fips" VARCHAR(05)   NOT NULL,
     "year" VARCHAR(04)   NOT NULL,
-    "num_civ_labor_force" DECIMAL  NOT NULL,
+    "num_civ_labor_force" DECIMAL   NOT NULL,
     "num_employed" DECIMAL   NOT NULL,
-    "last_update" timestamp  DEFAULT Localtimestamp NOT NULL,
+    "last_update" timestamp   NOT NULL,
     CONSTRAINT "pk_employment" PRIMARY KEY (
-        "fips"
+        "id"
      )
 );
 
-ALTER TABLE "unemployment" ADD CONSTRAINT "fk_unemloyment_fips" FOREIGN KEY("fips")
+ALTER TABLE "unemloyment" ADD CONSTRAINT "fk_unemloyment_fips" FOREIGN KEY("fips")
 REFERENCES "jobs" ("fips");
 
 ALTER TABLE "employment" ADD CONSTRAINT "fk_employment_fips" FOREIGN KEY("fips")
