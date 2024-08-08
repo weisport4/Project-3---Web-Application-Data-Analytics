@@ -44,58 +44,41 @@ class SQLHelper():
         # Find the most recent date in the data set.
         query = """
                 SELECT
-                    *
-                FROM
-                    income
+                    	state,
+                        county,
+            			employment.year,
+            			num_employed,
+            			num_unemployed,
+                        pctemp_agriculture,
+                        pctemp_mining,
+                        pctemp_construction,
+                        pctemp_manufacturing,
+                        pctemp_trade,
+                        pctemp_trans,
+                        pctemp_information,
+                        pctemp_fire,
+                        pctemp_services,
+                        pctemp_government,
+                        num_civ_labor_force
+            FROM
+                jobs
+            JOIN
+                employment
+                ON jobs.fips = employment.fips
+            JOIN
+                unemployment
+                ON employment.fips = unemployment.fips
+                AND employment.year = unemployment.year
+            WHERE
+                CAST(employment.year AS INTEGER) > 2014
+            	and state <> 'US'
+            ORDER BY 
+                jobs.state, jobs.county, employment.year
+		;
                 ;
                 """
 
         # Save the query results as a Pandas DataFrame
         income_data_sql_df = pd.read_sql(text(query), con=self.engine)
         data = income_data_sql_df.to_dict(orient="records")
-        return (data)
-
-    def jobs_sql(self):
-        # Find the most recent date in the data set.
-        query = """
-                SELECT
-                    *
-                FROM
-                    jobs
-                ;
-                """
-
-        # Save the query results as a Pandas DataFrame
-        jobs_sql_df = pd.read_sql(text(query), con=self.engine)
-        data = jobs_sql_df.to_dict(orient="records")
-        return (data)
-  
-    def unemployment_sql(self):
-        # Find the most recent date in the data set.
-        query = """
-                SELECT
-                    *
-                FROM
-                    unemployment
-                ;
-                """
-
-        # Save the query results as a Pandas DataFrame
-        unemployment_sql_df = pd.read_sql(text(query), con=self.engine)
-        data = unemployment_sql_df.to_dict(orient="records")
-        return (data)
-
-    def unemployment_sql(self):
-        # Find the most recent date in the data set.
-        query = """
-                SELECT
-                    *
-                FROM
-                    employment
-                ;
-                """
-
-        # Save the query results as a Pandas DataFrame
-        employment_sql_df = pd.read_sql(text(query), con=self.engine)
-        data = employment_sql_df.to_dict(orient="records")
         return (data)

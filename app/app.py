@@ -25,42 +25,12 @@ def welcome():
                                                                                                                                                                                             <br/>
             Explanation of the Routes:                                                                                                                                                      <br/>
             &nbsp;&nbsp;&nbsp;&nbsp;full_data_sql: Returns all the data from the income table using SQL.                                                                                    <br/>
-            &nbsp;&nbsp;&nbsp;&nbsp;reached_goal_sql: Returns the jobs data from the jobs table using SQL.
-                            <br/>
-            &nbsp;&nbsp;&nbsp;&nbsp;reached_goal_sql: Returns the unemployment data from the unemployment table using SQL.
-                            <br/>
-            &nbsp;&nbsp;&nbsp;&nbsp;reached_goal_sql: Returns the employment data from the employment table using SQL.
-                            <br/>
             ''')
 
 
 @app.route("/api/v1.0/income_data_sql")
-def income_data_sql():
+def full_data_sql():
     data = sql.income_data_sql()
-    return (jsonify(data))
-
-
-@app.route("/api/v1.0/jobs_data_sql")
-def jobs_data_sql():
-    data = sql.jobs_data_sql()
-    return (jsonify(data))
-
-
-@app.route("/api/v1.0/unemployment_data_sql")
-def unemployment_data_sql():
-    data = sql.unemployment_data_sql()
-    return (jsonify(data))
-
-@app.route("/api/v1.0/employment_data_sql")
-def employment_data_sql():
-    data = sql.employment_data_sql()
-    return (jsonify(data))
-
-
-
-@app.route("/api/v1.0/count_of_categories_by_outcome_orm")
-def count_of_categories_by_outcome_orm():
-    data = sql.count_of_categories_by_outcome_orm()
     return (jsonify(data))
 
 # Run the App
