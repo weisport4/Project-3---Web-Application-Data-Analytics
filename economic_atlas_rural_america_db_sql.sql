@@ -47,7 +47,7 @@ CREATE TABLE "income" (
      )
 );
 
-CREATE TABLE "unemloyment" (
+CREATE TABLE "unemployment" (
     "id" varchar(08)   NOT NULL,
     "fips" VARCHAR(05)   NOT NULL,
     "year" VARCHAR(04)   NOT NULL,
@@ -71,7 +71,7 @@ CREATE TABLE "employment" (
      )
 );
 
-ALTER TABLE "unemloyment" ADD CONSTRAINT "fk_unemloyment_fips" FOREIGN KEY("fips")
+ALTER TABLE "unemployment" ADD CONSTRAINT "fk_unemloyment_fips" FOREIGN KEY("fips")
 REFERENCES "jobs" ("fips");
 
 ALTER TABLE "employment" ADD CONSTRAINT "fk_employment_fips" FOREIGN KEY("fips")
