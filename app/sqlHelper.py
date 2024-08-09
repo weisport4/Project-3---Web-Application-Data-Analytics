@@ -40,7 +40,7 @@ class SQLHelper():
     # Database Queries
     #################################################
 
-    def full_data_sql(self):
+    def full_data(self):
         # Find the most recent date in the data set.
         query = """
                 SELECT
@@ -78,12 +78,12 @@ class SQLHelper():
                 """
 
         # Save the query results as a Pandas DataFrame
-        full_data__df = pd.read_sql(text(query), con=self.engine)
+        full_data_df = pd.read_sql(text(query), con=self.engine)
         data = full_data_df.to_dict(orient="records")
         return (data)
 
         # For a specified year, calculate 
-        def unemploymet_by_year_sql(self, year, state):
+        def unemploymet(self, year, state):
 
         query = f"""
                 SELECT
@@ -113,7 +113,7 @@ class SQLHelper():
 
 
         # For a specified year, calculate 
-        def employmet_by_year_sql(self, year, state):
+        def employmet(self, year, state):
 
         query = f"""
                 SELECT
