@@ -54,7 +54,7 @@ CREATE TABLE "unemployment" (
     "unemp_rate" DECIMAL   NOT NULL,
     "num_unemployed" DECIMAL   NOT NULL,
     "last_update" timestamp  DEFAULT Localtimestamp NOT NULL,
-    CONSTRAINT "pk_unemloyment" PRIMARY KEY (
+    CONSTRAINT "pk_unemployment" PRIMARY KEY (
         "id"
      )
 );
@@ -71,7 +71,7 @@ CREATE TABLE "employment" (
      )
 );
 
-ALTER TABLE "unemployment" ADD CONSTRAINT "fk_unemloyment_fips" FOREIGN KEY("fips")
+ALTER TABLE "unemployment" ADD CONSTRAINT "fk_unemployment_fips" FOREIGN KEY("fips")
 REFERENCES "jobs" ("fips");
 
 ALTER TABLE "employment" ADD CONSTRAINT "fk_employment_fips" FOREIGN KEY("fips")
