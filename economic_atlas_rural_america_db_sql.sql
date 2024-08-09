@@ -87,6 +87,6 @@ REFERENCES "jobs" ("fips");
 ALTER TABLE "employment" ADD CONSTRAINT "fk_employment_fips" FOREIGN KEY("fips")
 REFERENCES "jobs" ("fips");
 
-ALTER TABLE "state" ADD CONSTRAINT "fk_state_latitude" FOREIGN KEY("latitude")
+ALTER TABLE "state" ADD CONSTRAINT "fk_state_state" FOREIGN KEY("state")
 REFERENCES "jobs" ("state");
 
