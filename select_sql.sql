@@ -23,4 +23,10 @@ SELECT
     COUNT(*) AS table_count 
 FROM 
     income
+UNION ALL
+SELECT 
+    'state' AS table_name, 
+    COUNT(*) AS table_count 
+FROM 
+    state
 ;
