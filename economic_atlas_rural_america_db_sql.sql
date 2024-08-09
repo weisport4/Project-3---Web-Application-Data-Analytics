@@ -18,7 +18,7 @@ CREATE TABLE "jobs" (
     "pctemp_services" DECIMAL   NOT NULL,
     "pctemp_government" DECIMAL   NOT NULL,
     "num_civ_employed" DECIMAL   NOT NULL,
-    "last_update" timestamp  DEFAULT Localtimestamp NOT NULL,
+    "last_update" timestamp   NOT NULL,
     CONSTRAINT "pk_jobs" PRIMARY KEY (
         "fips"
      )
@@ -26,7 +26,7 @@ CREATE TABLE "jobs" (
 
 CREATE TABLE "income" (
     "fips" VARCHAR(05)   NOT NULL,
-    "state" VARCHAR(2)   NOT NULL,
+    "state" VARCHAR(02)   NOT NULL,
     "county" VARCHAR(40)   NOT NULL,
     "median_hh_inc_acs" DECIMAL   NOT NULL,
     "percapita_inc" DECIMAL   NOT NULL,
@@ -41,7 +41,7 @@ CREATE TABLE "income" (
     "pov_all" DECIMAL   NOT NULL,
     "pct_pov_all" DECIMAL   NOT NULL,
     "num_in_pov_0_17_acs" DECIMAL   NOT NULL,
-    "last_update" timestamp  DEFAULT Localtimestamp NOT NULL,
+    "last_update" timestamp   NOT NULL,
     CONSTRAINT "pk_income" PRIMARY KEY (
         "fips"
      )
@@ -53,7 +53,7 @@ CREATE TABLE "unemployment" (
     "year" VARCHAR(04)   NOT NULL,
     "unemp_rate" DECIMAL   NOT NULL,
     "num_unemployed" DECIMAL   NOT NULL,
-    "last_update" timestamp  DEFAULT Localtimestamp NOT NULL,
+    "last_update" TIMESTAMP   NOT NULL,
     CONSTRAINT "pk_unemployment" PRIMARY KEY (
         "id"
      )
@@ -65,9 +65,19 @@ CREATE TABLE "employment" (
     "year" VARCHAR(04)   NOT NULL,
     "num_civ_labor_force" DECIMAL   NOT NULL,
     "num_employed" DECIMAL   NOT NULL,
-    "last_update" timestamp  DEFAULT Localtimestamp NOT NULL,
+    "last_update" timestamp   NOT NULL,
     CONSTRAINT "pk_employment" PRIMARY KEY (
         "id"
+     )
+);
+
+CREATE TABLE "state" (
+    "state" varchar(02)   NOT NULL,
+    "latitude" float   NOT NULL,
+    "longitude" float   NOT NULL,
+    "last_update" timestamp   NOT NULL,
+    CONSTRAINT "pk_state" PRIMARY KEY (
+        "state"
      )
 );
 
@@ -76,4 +86,7 @@ REFERENCES "jobs" ("fips");
 
 ALTER TABLE "employment" ADD CONSTRAINT "fk_employment_fips" FOREIGN KEY("fips")
 REFERENCES "jobs" ("fips");
+
+ALTER TABLE "state" ADD CONSTRAINT "fk_state_latitude" FOREIGN KEY("latitude")
+REFERENCES "jobs" ("state");
 
