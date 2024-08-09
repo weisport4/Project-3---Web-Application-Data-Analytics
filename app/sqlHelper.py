@@ -70,15 +70,73 @@ class SQLHelper():
                 ON employment.fips = unemployment.fips
                 AND employment.year = unemployment.year
             WHERE
-                CAST(employment.year AS INTEGER) > 2014
+                CAST(employment.year AS INTEGER) > 2010
             	and state <> 'US'
             ORDER BY 
                 jobs.state, jobs.county, employment.year
-		;
                 ;
                 """
 
         # Save the query results as a Pandas DataFrame
-        income_data_sql_df = pd.read_sql(text(query), con=self.engine)
-        data = income_data_sql_df.to_dict(orient="records")
+        full_data__df = pd.read_sql(text(query), con=self.engine)
+        data = full_data_df.to_dict(orient="records")
         return (data)
+
+        # For a specified year, calculate 
+        def unemploymet_by_year_sql(self, year, state):
+
+        query = f"""
+                SELECT
+                    state,
+                    county,
+                	sum(num_unemployed) as total_unemployed
+                FROM
+                    jobs
+                JOIN
+                   unemployment
+                ON jobs.fips = unemployment.fips
+                WHERE
+                    CAST(unemployment.year AS INTEGER) = '{year}'
+                	and state <> '{state}'
+                GROUP BY
+                	state,
+                	county,
+                	unemployment.year
+                ORDER BY
+                    total_unemployed desc
+                ;
+            """
+
+        unemployment_df = pd.read_sql(text(query), con = self.engine)
+        data = unemployment_df.to_dict(orient="records")
+        return(data)
+
+
+        # For a specified year, calculate 
+        def employmet_by_year_sql(self, year, state):
+
+        query = f"""
+                SELECT
+                    state,
+                    county,
+                	sum(num_employed) as total_employed
+                FROM
+                    jobs
+                JOIN
+                   employment
+                ON jobs.fips = employment.fips
+                WHERE
+                    CAST(employment.year AS INTEGER) = '{year}'
+                	and state <> '{state}'
+                GROUP BY
+                	state,
+                	county,
+                	employment.year
+                ORDER BY
+                    total_employed desc
+                ;
+            """
+
+        employment_df = pd.read_sql(text(query), con = self.engine)
+        data = employment_df.to_dict(orient="records")
+        return(data)
