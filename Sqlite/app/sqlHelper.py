@@ -43,65 +43,38 @@ class SQLHelper():
     def full_data(self):
         # Find the most recent date in the data set.
         query = """
-                SELECT  state.state,
-            		year,
-            		name,
-            		latitude,
-            		longitude,
-            		tot_num_employed,
-            		tot_num_unemployed,
-            		tot_pctemp_agriculture,
-            		tot_pctemp_mining,
-            		tot_pctemp_construction,
-            		tot_pctemp_manufacturing,
-            		tot_pctemp_trade,
-            		tot_pctemp_trans,
-            		tot_pctemp_information,
-            		tot_pctemp_fire,
-            		tot_pctemp_services,
-            		tot_pctemp_government,
-            		tot_um_civ_labor_force
+                SELECT
+                    	state,
+                        county,
+            			employment.year,
+            			num_employed,
+            			num_unemployed,
+                        pctemp_agriculture,
+                        pctemp_mining,
+                        pctemp_construction,
+                        pctemp_manufacturing,
+                        pctemp_trade,
+                        pctemp_trans,
+                        pctemp_information,
+                        pctemp_fire,
+                        pctemp_services,
+                        pctemp_government,
+                        num_civ_labor_force
             FROM
-            	(
-            	SELECT
-                    jobs.state,
-                	employment.year,
-                	sum(num_employed) as tot_num_employed,
-                	sum(num_unemployed) as tot_num_unemployed,
-                    sum(pctemp_agriculture) as tot_pctemp_agriculture,
-                    sum(pctemp_mining)as tot_pctemp_mining,
-                    sum(pctemp_construction) as tot_pctemp_construction,
-                    sum(pctemp_manufacturing) as tot_pctemp_manufacturing,
-                    sum(pctemp_trade) as tot_pctemp_trade,
-                    sum(pctemp_trans) as tot_pctemp_trans,
-                    sum(pctemp_information) as tot_pctemp_information,
-                    sum(pctemp_fire) as tot_pctemp_fire,
-                    sum(pctemp_services) as tot_pctemp_services,
-                    sum(pctemp_government) as tot_pctemp_government,
-                    sum(num_civ_labor_force) as tot_um_civ_labor_force
-            	FROM
-                	jobs
-            	JOIN
-                	employment
-            	ON jobs.fips = employment.fips
-            	JOIN
-            		unemployment
+                jobs
+            JOIN
+                employment
+                ON jobs.fips = employment.fips
+            JOIN
+                unemployment
                 ON employment.fips = unemployment.fips
                 AND employment.year = unemployment.year
-            	WHERE
-                	CAST(employment.year AS INTEGER) > 2010
-            		and jobs.state <> 'US'
-            	GROUP BY
-            		jobs.state, 
-            		employment.year
-            	ORDER BY 
-                	jobs.state, 
-            		employment.year
-            	) AS JOBS
-            JOIN
-            	state ON JOBS.state = state.state
+            WHERE
+                CAST(employment.year AS INTEGER) > 2010
+            	and state <> 'US'
             ORDER BY 
-            	state, year desc
+                jobs.state, jobs.county, employment.year
+                ;
                 """
 
         # Save the query results as a Pandas DataFrame
