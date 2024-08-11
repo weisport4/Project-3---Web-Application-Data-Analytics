@@ -85,7 +85,7 @@ CREATE TABLE "state" (
 ALTER TABLE "jobs" ADD CONSTRAINT "fk_jobs_econ_state" FOREIGN KEY("econ_state")
 REFERENCES "state" ("econ_state");
 
-ALTER TABLE "income" ADD CONSTRAINT "fk_income_state" FOREIGN KEY("state")
+ALTER TABLE "income" ADD CONSTRAINT "fk_income_state" FOREIGN KEY("econ_state")
 REFERENCES "state" ("econ_state");
 
 ALTER TABLE "unemployment" ADD CONSTRAINT "fk_unemployment_fips" FOREIGN KEY("fips")
