@@ -5,7 +5,7 @@
 
 CREATE TABLE "jobs" (
     "fips" VARCHAR(05)   NOT NULL,
-    "state" VARCHAR(2)   NOT NULL,
+    "econ_state" VARCHAR(2)   NOT NULL,
     "county" VARCHAR(40)   NOT NULL,
     "pctemp_agriculture" DECIMAL   NOT NULL,
     "pctemp_mining" DECIMAL   NOT NULL,
@@ -26,7 +26,7 @@ CREATE TABLE "jobs" (
 
 CREATE TABLE "income" (
     "fips" VARCHAR(05)   NOT NULL,
-    "state" VARCHAR(02)   NOT NULL,
+    "econ_state" VARCHAR(02)   NOT NULL,
     "county" VARCHAR(40)   NOT NULL,
     "median_hh_inc_acs" DECIMAL   NOT NULL,
     "percapita_inc" DECIMAL   NOT NULL,
@@ -50,7 +50,7 @@ CREATE TABLE "income" (
 CREATE TABLE "unemployment" (
     "id" varchar(08)   NOT NULL,
     "fips" VARCHAR(05)   NOT NULL,
-    "year" VARCHAR(04)   NOT NULL,
+    "econ_year" VARCHAR(04)   NOT NULL,
     "unemp_rate" DECIMAL   NOT NULL,
     "num_unemployed" DECIMAL   NOT NULL,
     "last_update" timestamp  DEFAULT Localtimestamp NOT NULL,
@@ -62,7 +62,7 @@ CREATE TABLE "unemployment" (
 CREATE TABLE "employment" (
     "id" varchar(08)   NOT NULL,
     "fips" VARCHAR(05)   NOT NULL,
-    "year" VARCHAR(04)   NOT NULL,
+    "econ_year" VARCHAR(04)   NOT NULL,
     "num_civ_labor_force" DECIMAL   NOT NULL,
     "num_employed" DECIMAL   NOT NULL,
     "last_update" timestamp  DEFAULT Localtimestamp NOT NULL,
@@ -72,25 +72,25 @@ CREATE TABLE "employment" (
 );
 
 CREATE TABLE "state" (
-    "state" varchar(02)   NOT NULL,
+    "econ_state" varchar(02)   NOT NULL,
     "latitude" float   NOT NULL,
     "longitude" float   NOT NULL,
-    "name" varchar(25) NOT NULL,
+    "name" varchar(25)   NOT NULL,
     "last_update" timestamp  DEFAULT Localtimestamp NOT NULL,
     CONSTRAINT "pk_state" PRIMARY KEY (
-        "state"
+        "econ_state"
      )
 );
+
+ALTER TABLE "jobs" ADD CONSTRAINT "fk_jobs_econ_state" FOREIGN KEY("econ_state")
+REFERENCES "state" ("econ_state");
+
+ALTER TABLE "income" ADD CONSTRAINT "fk_income_state" FOREIGN KEY("state")
+REFERENCES "state" ("econ_state");
 
 ALTER TABLE "unemployment" ADD CONSTRAINT "fk_unemployment_fips" FOREIGN KEY("fips")
 REFERENCES "jobs" ("fips");
 
 ALTER TABLE "employment" ADD CONSTRAINT "fk_employment_fips" FOREIGN KEY("fips")
 REFERENCES "jobs" ("fips");
-
-ALTER TABLE "jobs" ADD CONSTRAINT "fk_income_state" FOREIGN KEY ("state") 
-REFERENCES "state" ("state");
-
-ALTER TABLE "income" ADD CONSTRAINT "fk_income_state" FOREIGN KEY ("state") 
-REFERENCES "state" ("state");
 
