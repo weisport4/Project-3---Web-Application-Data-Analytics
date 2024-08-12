@@ -1,0 +1,4 @@
+.icon-size {
+  width: .05%; /* Width relative to the container */
+  height: .05%; /* Maintain aspect ratio */
+}
