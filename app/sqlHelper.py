@@ -69,9 +69,9 @@ class SQLHelper():
                 """
 
         unemployment_df = pd.read_sql(text(query), con=self.engine)
-        data_bar = unemployment_df.to_dict(orient="records")
+        unemployment_data = unemployment_df.to_dict(orient="records")
 
-        return(employment_data)
+        return(unemployment_data)
     
     def getEmploymenteData(self, econ_state):
         # allow the user to select ALL country
@@ -112,9 +112,9 @@ class SQLHelper():
                 """
 
         employment_df = pd.read_sql(text(query), con=self.engine)
-        data_pie = employment_df.to_dict(orient="records")
+        employment_data = employment_df.to_dict(orient="records")
 
-        return(unemployment_data)
+        return(employment_data)
     
     def getAllData(self, econ_state):
         # allow the user to select ALL country
@@ -170,7 +170,7 @@ class SQLHelper():
                     ON employment.fips = unemployment.fips
                     AND employment.econ_year = unemployment.econ_year
                     WHERE
-                        jobs.econ_state <> 'US'
+                        {where_clause};
                     GROUP BY
                         jobs.econ_state,
                         employment.econ_year
@@ -186,6 +186,6 @@ class SQLHelper():
         """
 
         alldata_df = pd.read_sql(text(query), con=self.engine)
-        data_pie2 = alldata_df.to_dict(orient="records")
+        all_data = alldata_df.to_dict(orient="records")
 
-        return(data_pie2)
+        return(all_data)
