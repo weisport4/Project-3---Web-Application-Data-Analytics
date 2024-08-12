@@ -25,20 +25,20 @@ def about_us():
 def links():
     return render_template("links.html")
 
-@app.route("/api/v1.0/<econ_state>")
-def get_data(econ_state):
-    print(econ_state)
+@app.route("/api/v1.0/<country>")
+def get_data(country):
+    print(country)
 
     # execute the queries
-    data_map = sqlHelper.getStateData(econ_state)
-    data_bar = sqlHelper.getUnemploymentData(econ_state)
-    data_pie = sqlHelper.getEmploymentData(econ_state)
-    data_pie2 = sqlHelper.getAllData(econ_state)
+    data_map = sqlHelper.getMapData(country)
+    data_bar = sqlHelper.getBarData(country)
+    data_pie = sqlHelper.getPieData(country)
+    data_pie2 = sqlHelper.getPieData2(country)
 
-    data = {"state_data": data_map,
-           "unemployment_data": data_bar,
-           "employment_data": data_pie,
-           "all_data": data_pie2}
+    data = {"map_data": data_map,
+           "bar_data": data_bar,
+           "pie_data": data_pie,
+           "pie_data2": data_pie2}
 
     return jsonify(data)
 
