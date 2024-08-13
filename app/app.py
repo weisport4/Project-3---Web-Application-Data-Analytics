@@ -25,22 +25,26 @@ def about_us():
 def links():
     return render_template("links.html")
 
-@app.route("/api/v1.0/<econ_state>")
-def get_data(econ_state):
-    print(econ_state)
+@app.route("/api/v1.0/stateData/<econ_state>")
+def StateData(econ_state):
+    state_data = sqlHelper.getstateData(econ_state)
+    return (jsonify(state_data))
 
-    # execute the queries
-    data_map = sqlHelper.getStateData(econ_state)
-    data_bar = sqlHelper.getUnemploymentData(econ_state)
-    data_pie = sqlHelper.getEmploymentData(econ_state)
-    data_pie2 = sqlHelper.getAllData(econ_state)
+@app.route("/api/v1.0/unemploymentData/<econ_state>")
+def UnemploymentData(econ_state):
+    unemployment_data = sqlHelper.getUnemploymentData(econ_state)
+    return (jsonify(unemployment_data))
 
-    data = {"state_data": data_map,
-           "unemployment_data": data_bar,
-           "employment_data": data_pie,
-           "all_data": data_pie2}
+@app.route("/api/v1.0/employmentData/<econ_state>")
+def EmploymentData(econ_state):
+    employment_data = sqlHelper.getEmploymenteData(econ_state)
+    return (jsonify(employment_data))
 
-    return jsonify(data)
+@app.route("/api/v1.0/allData/<econ_state>")
+def AllData(econ_state):
+    all_data = sqlHelper.getAllData(econ_state)
+    return (jsonify(all_data))
+
 
 #################################################
 # Execute the App

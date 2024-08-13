@@ -1,19 +1,41 @@
-import sqlalchemy
-from sqlalchemy import create_engine, func, inspect, text
+from sqlalchemy.ext.automap import automap_base
+from sqlalchemy.orm import Session
+from sqlalchemy import create_engine, text
 import pandas as pd
-
+import config as cfg
+# The Purpose of this Class is to separate out any Database logic
 class SQLHelper():
-
+    #################################################
+    # Database Setup
+    #################################################
     def __init__(self):
-        self.engine = create_engine("sqlite:///resources/AQI and Lat Long of Countries.sqlite")
+        # Setup the Postgres connection variables
+        SQL_USERNAME = cfg.SQL_USERNAME
+        SQL_PASSWORD = cfg.SQL_PASSWORD
+        SQL_IP = cfg.SQL_IP
+        SQL_PORT = cfg.SQL_PORT
+        DATABASE = cfg.DATABASE
+        connection_string = f'postgresql+psycopg2://{SQL_USERNAME}:{SQL_PASSWORD}@{SQL_IP}:{SQL_PORT}/{DATABASE}'
+        # Connect to PostgreSQL server
+        self.engine = create_engine(connection_string)
+        self.Base = None
+        # automap Base classes
+        self.init_base()
+    def init_base(self):
+        # reflect an existing database into a new model
+        self.Base = automap_base()
+        # reflect the tables
+        self.Base.prepare(autoload_with=self.engine)
 
+    #################################################
+    # Database Queries
+    #################################################
     def getstateData(self, econ_state):
         # allow the user to select ALL country
         if econ_state == "All":
             where_clause = f"econ_state <> 'US'"
         else:
-            where_clause = f"econ_state = '{state}'"
-
+            where_clause = f"econ_state = '{econ_state}'"
         query = f"""
                 SELECT
                     econ_state,
@@ -25,15 +47,12 @@ class SQLHelper():
                 WHERE
                     {where_clause};
         """
-
         state_df = pd.read_sql(text(query), con=self.engine)
         data_map = state_df.to_dict(orient="records")
-
         return(data_map)
-    
     def getUnemploymentData(self, econ_state):
         # allow the user to select ALL states
-        if Year == "All":
+        if econ_state == "All":
             where_clause = f"econ_state <> 'US'"
         else:
             where_clause = f"j.econ_state = '{econ_state}'"
@@ -67,19 +86,15 @@ class SQLHelper():
                 ORDER BY
                     u.econ_state, u.econ_year;
                 """
-
         unemployment_df = pd.read_sql(text(query), con=self.engine)
         unemployment_data = unemployment_df.to_dict(orient="records")
-
         return(unemployment_data)
-    
     def getEmploymenteData(self, econ_state):
         # allow the user to select ALL country
         if econ_state == "All":
             where_clause = f"econ_state <> 'US'"
         else:
             where_clause = f"j.econ_state = '{econ_state}'"
-
         query = f"""
                 SELECT
                     e.econ_state,
@@ -110,19 +125,15 @@ class SQLHelper():
                 ORDER BY
                     e.econ_state, e.econ_year;
                 """
-
         employment_df = pd.read_sql(text(query), con=self.engine)
         employment_data = employment_df.to_dict(orient="records")
-
         return(employment_data)
-    
     def getAllData(self, econ_state):
         # allow the user to select ALL country
         if econ_state == "All":
             where_clause = f"econ_state <> 'US'"
         else:
             where_clause = f"econ_ = '{econ_state}'"
-
         query = f"""
                 SELECT state.econ_state,
                         econ_year,
@@ -184,8 +195,6 @@ class SQLHelper():
                     econ_state,
                     econ_year
         """
-
         alldata_df = pd.read_sql(text(query), con=self.engine)
         all_data = alldata_df.to_dict(orient="records")
-
         return(all_data)

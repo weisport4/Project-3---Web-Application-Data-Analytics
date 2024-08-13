@@ -1,17 +1,16 @@
 function do_work() {
   // extract user input
-  let min_launches = d3.select("#launch_filter").property("value");
-  min_launches = parseInt(min_launches);
-  let region = d3.select("#region_filter").property("value");
+  let state = d3.select("#state_dropdown").property("value");
 
   // We need to make a request to the API
-  let url = `/api/v1.0/get_dashboard/${min_launches}/${region}`;
+  let url = `/api/v1.0/dashboard/${econ_data}`;
   d3.json(url).then(function (data) {
 
     // create the graphs
-    make_bar(data.bar_data);
-    make_pie(data.pie_data);
-    make_table(data.table_data)
+    make_bar(all_data);
+    make_sunburst(unemployment_data);
+    make_bubble(employment_data);
+    make_map(all_data);
   });
 }
 
@@ -39,33 +38,38 @@ function make_table(filtered_data) {
   }
 }
 
-function make_pie(filtered_data) {
-  // sort values
-  filtered_data.sort((a, b) => (b.launch_attempts - a.launch_attempts));
-
-  // extract data for pie chart
-  let pie_data = filtered_data.map(x => x.launch_attempts);
-  let pie_labels = filtered_data.map(x => x.name);
-
+function make_bubble_chart(filtered_data) {
+  // Extract the data for the bubble chart
+  let bubble_x = filtered_data.map(d => d.employment_rate);
+  let bubble_y = filtered_data.map(d => d.unemployment_rate);
+  let bubble_size = filtered_data.map(d => d.employment_count);
+  let bubble_text = filtered_data.map(d => d.state);
+};
+  // Create the trace for the bubble chart
   let trace1 = {
-    values: pie_data,
-    labels: pie_labels,
-    type: 'pie',
-    hoverinfo: 'label+percent+name',
-    hole: 0.4,
-    name: "Attempts"
-  }
+    x: bubble_x,
+    y: bubble_y,
+    text: bubble_text,
+    mode: 'markers',
+    marker: {
+      size: bubble_size,
+      sizemode: 'area',
+      sizeref: 2.0 * Math.max(...bubble_size) / (100**2),
+      color: bubble_size,
+      colorscale: 'Viridis',
+      showscale: true
+    }
+  };
 
-  // Create data array
-  let data = [trace1];
-
-  // Apply a title to the layout
+  // Define the layout for the bubble chart
   let layout = {
-    title: "SpaceX Launch Attempts",
-  }
-
-  Plotly.newPlot("pie_chart", data, layout);
-}
+    title: 'Employment Rate vs Unemployment Rate',
+    xaxis: { title: 'Employment Rate (%)' },
+    yaxis: { title: 'Unemployment Rate (%)' },
+    showlegend: false,
+    height: 600,
+    width: 1000
+  };
 
 function make_bar(filtered_data) {
   // sort values
