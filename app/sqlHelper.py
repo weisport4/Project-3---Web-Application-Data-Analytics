@@ -76,7 +76,7 @@ class SQLHelper():
                         jobs j
                     ON u.fips = j.fips
                     WHERE
-                        {where_clause};
+                        {where_clause}
                     GROUP BY
                         j.econ_state, u.econ_year
                     ) AS u
@@ -115,7 +115,7 @@ class SQLHelper():
                         jobs j
                     ON e.fips = j.fips
                     WHERE
-                        {where_clause};
+                        {where_clause}
                     GROUP BY
                         j.econ_state, e.econ_year
                     ) AS e
@@ -181,7 +181,7 @@ class SQLHelper():
                     ON employment.fips = unemployment.fips
                     AND employment.econ_year = unemployment.econ_year
                     WHERE
-                        {where_clause};
+                        {where_clause}
                     GROUP BY
                         jobs.econ_state,
                         employment.econ_year
@@ -193,7 +193,7 @@ class SQLHelper():
                     state ON JOBS.econ_state = state.econ_state
                 ORDER BY
                     econ_state,
-                    econ_year
+                    econ_year;
         """
         alldata_df = pd.read_sql(text(query), con=self.engine)
         all_data = alldata_df.to_dict(orient="records")
