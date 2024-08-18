@@ -27,25 +27,32 @@
             margin-top: 20px;
         }
     </style>
+        <style>
+            .large-image {
+                width: 80%; /* or specify a fixed width */
+                height: 70%; /* maintains aspect ratio */
+            }
+        </style>
 </head>
 <body>
 
 <nav class="navbar navbar-expand-lg bg-primary" data-bs-theme="dark">
     <div class="container-fluid">
-        <a class="navbar-brand" href="/">Home</a>
+        <a class="navbar-brand" href="home.html">Home</a>
+        <!-- <a class="navbar-brand" href="/">Home</a> -->
         <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarColor03" aria-controls="navbarColor03" aria-expanded="false" aria-label="Toggle navigation">
             <span class="navbar-toggler-icon"></span>
         </button>
         <div class="collapse navbar-collapse" id="navbarColor03">
             <ul class="navbar-nav me-auto">
                 <li class="nav-item">
-                    <a class="nav-link" href="/dashboard">Dashboard</a>
+                    <a class="nav-link" href="dashboard.html">Dashboard</a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link" href="/about_us">About Us</a>
+                    <a class="nav-link" href="about_us.html">About Us</a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link" href="/links">Work Cited</a>
+                    <a class="nav-link" href="links.html">Work Cited</a>
                 </li>
             </ul>
         </div>
@@ -60,7 +67,8 @@
             varying years.  The navigation bar above can be used to view visualizations for the data as well 
             as a map is included.
         </p>
-        <img src="../static/images/jobs.jpg" alt="Team Member 3" class="img-fluid" style="max-width: 500px; height: 4cqh;">
+            <img src="../static/images/jobs.jpg" class="large-image" alt="Large Image">
+        <!-- <img src="../static/images/jobs.jpg" alt="Team Member 3" class="img-fluid" style="max-width: 600px; height: 1500;"> -->
     </div>
 </div>
 

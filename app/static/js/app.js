@@ -1,50 +1,61 @@
 function do_work() {
-  // extract user input
+  // Extract user input
   let state = d3.select("#state_dropdown").property("value");
 
-  // We need to make a request to the API
-  let url = `/api/v1.0/dashboard/${econ_data}`;
-  d3.json(url).then(function (data) {
+  // Request to the API for all relevant data
+  let allDataUrl = `/api/v1.0/allData/${state}`;
+  let unemploymentDataUrl = `/api/v1.0/unemploymentData/${state}`;
+  let employmentDataUrl = `/api/v1.0/employmentData/${state}`;
 
-    // create the graphs
-    make_bar(all_data);
-    make_sunburst(unemployment_data);
-    make_bubble(employment_data);
-    make_map(all_data);
+  Promise.all([
+    d3.json(allDataUrl),
+    d3.json(unemploymentDataUrl),
+    d3.json(employmentDataUrl)
+  ]).then(function (data) {
+    let all_data = data[0];
+    let unemployment_data = data[1];
+    let employment_data = data[2];
+
+    // Check if data is valid
+    if (all_data && unemployment_data && employment_data) {
+      // Create the graphs
+      make_bar_chart(all_data);
+      make_sunburst_chart(unemployment_data); // Assuming a function make_sunburst_chart exists
+      make_bubble_chart(employment_data);
+      make_map(all_data); // Assuming a function make_map exists
+    } else {
+      console.error("No data found for the selected state.");
+    }
+  }).catch(function (error) {
+    console.error("Error fetching data: ", error);
   });
 }
 
 function make_table(filtered_data) {
-  // select table
+  // Select table
   let table = d3.select("#data_table");
   let table_body = table.select("tbody");
-  table_body.html(""); // destroy any existing rows
+  table_body.html(""); // Clear existing rows
 
-  // create table
-  for (let i = 0; i < filtered_data.length; i++){
-    // get data row
-    let data_row = filtered_data[i];
-
-    // creates new row in the table
+  // Create table
+  filtered_data.forEach(data_row => {
     let row = table_body.append("tr");
-    row.append("td").text(data_row.name);
-    row.append("td").text(data_row.full_name);
-    row.append("td").text(data_row.region);
+    row.append("td").text(data_row.employment_rate);
+    row.append("td").text(data_row.unemployment_rate);
+    row.append("td").text(data_row.state);
     row.append("td").text(data_row.latitude);
     row.append("td").text(data_row.longitude);
-    row.append("td").text(data_row.launch_attempts);
-    row.append("td").text(data_row.launch_successes);
-    row.append("td").text(data_row.launch_attempts - data_row.launch_successes);
-  }
+    row.append("td").text(data_row.total_employment); // Adjusted to match data structure
+  });
 }
 
 function make_bubble_chart(filtered_data) {
-  // Extract the data for the bubble chart
+  // Extract data for the bubble chart
   let bubble_x = filtered_data.map(d => d.employment_rate);
   let bubble_y = filtered_data.map(d => d.unemployment_rate);
-  let bubble_size = filtered_data.map(d => d.employment_count);
+  let bubble_size = filtered_data.map(d => d.total_employment);
   let bubble_text = filtered_data.map(d => d.state);
-};
+
   // Create the trace for the bubble chart
   let trace1 = {
     x: bubble_x,
@@ -71,64 +82,82 @@ function make_bubble_chart(filtered_data) {
     width: 1000
   };
 
-function make_bar(filtered_data) {
-  // sort values
-  filtered_data.sort((a, b) => (b.launch_attempts - a.launch_attempts));
+  // Render the plot to the div tag with id "bubble_chart"
+  Plotly.newPlot("bubble_chart", [trace1], layout);
+}
 
-  // extract the x & y values for our bar chart
-  let bar_x = filtered_data.map(x => x.name);
-  let bar_text = filtered_data.map(x => x.full_name);
-  let bar_y1 = filtered_data.map(x => x.launch_attempts);
-  let bar_y2 = filtered_data.map(x => x.launch_successes);
+function make_bar_chart(filtered_data) {
+  // Sort values by employment rate
+  filtered_data.sort((a, b) => b.employment_rate - a.employment_rate);
 
-  // Trace1 for the Launch Attempts
+  // Extract the x & y values for our bar chart
+  let bar_x = filtered_data.map(x => x.state);
+  let bar_y = filtered_data.map(x => x.employment_rate);
+
+  // Trace for the bar chart
   let trace1 = {
     x: bar_x,
-    y: bar_y1,
+    y: bar_y,
     type: 'bar',
     marker: {
       color: "skyblue"
     },
-    text: bar_text,
-    name: "Attempts"
-  };
-
-  // Trace 2 for the Launch Successes
-  let trace2 = {
-    x: bar_x,
-    y: bar_y2,
-    type: 'bar',
-    marker: {
-      color: "firebrick"
-    },
-    text: bar_text,
-    name: "Successes"
+    name: "Employment Rate"
   };
 
   // Create data array
-  let data = [trace1, trace2];
+  let data = [trace1];
 
   // Apply a title to the layout
   let layout = {
-    title: "SpaceX Launch Results",
-    barmode: "group",
-    // Include margins in the layout so the x-tick labels display correctly
+    title: "Employment Rate by State",
+    xaxis: { title: "State" },
+    yaxis: { title: "Employment Rate (%)" },
     margin: {
       l: 50,
       r: 50,
-      b: 200,
+      b: 150,
       t: 50,
       pad: 4
     }
   };
 
-  // Render the plot to the div tag with id "plot"
+  // Render the plot to the div tag with id "bar_chart"
   Plotly.newPlot("bar_chart", data, layout);
-
 }
 
-// event listener for CLICK on Button
+function make_sunburst_chart(filtered_data) {
+  // Assume filtered_data has hierarchical data with levels like sector, state, and employment count
+  let labels = filtered_data.map(d => d.sector + " - " + d.state);
+  let parents = filtered_data.map(d => d.sector);
+  let values = filtered_data.map(d => d.employment_count);
+
+  // Create trace for sunburst chart
+  let trace1 = {
+    type: "sunburst",
+    labels: labels,
+    parents: parents,
+    values: values,
+    branchvalues: 'total',
+    outsidetextfont: { size: 20, color: "#377eb8"},
+    leaf: { opacity: 0.6 },
+    marker: { line: { width: 2 }},
+  };
+
+  // Apply a title to the layout
+  let layout = {
+    title: "Employment Distribution by Sector and State",
+    margin: { l: 10, r: 10, b: 10, t: 40 },
+    sunburstcolorway: ["#636efa", "#ef553b", "#00cc96", "#ab63fa", "#19d3f3"],
+    extendsunburstcolorway: true,
+  };
+
+  // Render the plot to the div tag with id "sunburst_chart"
+  Plotly.newPlot("sunburst_chart", [trace1], layout);
+}
+
+// Event listener for CLICK on Button
 d3.select("#filter").on("click", do_work);
 
-// on page load, don't wait for the click to make the graph, use default
+// On page load, don't wait for the click to make the graph, use default
 do_work();
