@@ -1,5 +1,0 @@
-SQL_USERNAME = 'postgres'
-SQL_PASSWORD = 'postgres'
-SQL_IP = 'localhost'
-SQL_PORT = '5432'
-DATABASE = 'economic_atlas_rural_america'
